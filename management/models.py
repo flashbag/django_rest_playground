@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import Group, User
 from django.contrib.auth.models import UserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -8,13 +9,27 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+
 class UserType(models.Model):
 
-   	name = models.CharField(_('name'), max_length=30, unique=True, blank=True, null=True,)
+    objects = models.Manager()
+
+    name = models.CharField(_('name'), max_length=30, unique=True, blank=True, null=True,)
+
+
+    def __str__(self):
+        return self.name
+
 
 class UserStatus(models.Model):
 
+    objects = models.Manager()
+
     name = models.CharField(_('name'), max_length=30, unique=True, blank=True, null=True,)
+
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractBaseUser, PermissionsMixin):
