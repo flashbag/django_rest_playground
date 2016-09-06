@@ -27,10 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'management.User'
 
 # Application definition
 
 INSTALLED_APPS = [
+
+    'rest_framework',
+    'management.apps.ManagementConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
