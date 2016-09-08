@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.dispatch import receiver
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.models import UserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -12,9 +13,7 @@ from django.utils import timezone
 
 class UserType(models.Model):
 
-    objects = models.Manager()
-
-    name = models.CharField(_('name'), max_length=30, unique=True, blank=True, null=True,)
+    name = models.CharField(_('name'), max_length=30, unique=True, null=True, )
 
 
     def __str__(self):
@@ -23,9 +22,7 @@ class UserType(models.Model):
 
 class UserStatus(models.Model):
 
-    objects = models.Manager()
-
-    name = models.CharField(_('name'), max_length=30, unique=True, blank=True, null=True,)
+    name = models.CharField(_('name'), max_length=30, unique=True, null=True, )
 
 
     def __str__(self):
@@ -46,8 +43,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(_('staff status'), default=False,)
 
-    user_type = models.ForeignKey( UserType, null=True, )
-    user_status = models.ForeignKey( UserStatus, null=True, )
+    user_type = models.OneToOneField( UserType, null=True, unique=False)
+    user_status = models.OneToOneField( UserStatus, null=True, unique=False)
 
     REQUIRED_FIELDS = ['email']
     USERNAME_FIELD = 'username'
@@ -59,7 +56,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('Users')
         abstract = False
 
+    # def set_group(group)
+
+
+
+    def save(self, *args, **kwargs):
+
+          self.set_password(self.password)
+
+          super(User, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.username
-
-

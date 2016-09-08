@@ -4,13 +4,14 @@ from management.models import User, UserType, UserStatus
 
 class UserSerializer(serializers.ModelSerializer):
 
-	user_type = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=UserType.objects.all())
-	user_status = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=UserStatus.objects.all())
+	password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+	user_type = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=UserType.objects.all())
+	user_status = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=UserStatus.objects.all())
 
 	class Meta:
 		model = User
 		fields = (
-			'id', 'email', 'username',
+			'id', 'email', 'username', 'password',
 			'first_name', 'last_name',
 			# 'date_joined',
 			# 'is_staff',
